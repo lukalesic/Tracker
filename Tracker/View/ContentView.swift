@@ -12,7 +12,7 @@ struct ContentView: View {
 
     var body: some View {
         TabView {
-            MainTrackerView()
+            HomeExpenseView()
                 .tabItem {
                     Label("Home", systemImage: "house.fill")
             }

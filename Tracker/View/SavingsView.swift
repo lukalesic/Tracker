@@ -14,31 +14,41 @@ struct SavingsView: View {
     var body: some View
     {
         NavigationView {
-            ZStack{
+            
+            switch viewModel.dataState {
+            case .empty:
+                ProgressView()
+                    .onAppear {
+                        viewModel.fetchAllSavings()
+                    }
                 
-                VStack{
-                    ScrollView {
-                        savingsCard()
-                        
-                        transactionsView()
+            case .loading:
+                ProgressView()
+                
+            case .populated:
+                
+                ZStack{
+                    VStack{
+                        ScrollView {
+                            savingsCard()
+                            transactionsView()
+                        }
+                        .sheet(isPresented: $viewModel.addNew) {
+                            viewModel.clearData()
+                        } content: {
+                            NewSavingView()
+                                .environmentObject(viewModel)
+                        }
                     }
                     
-                    .sheet(isPresented: $viewModel.addNew) {
-                        viewModel.clearData()
-                    } content: {
-                        NewSavingView()
-                            .environmentObject(viewModel)
-                    }
                 }
-                
-            }
-            .navigationTitle("My expenses")
-            .onAppear {
-                viewModel.fetchAllSavings()
+                .navigationTitle("My expenses")
             }
         }
-        
     }
+}
+
+extension SavingsView {
     
     @ViewBuilder
     func transactionsView() -> some View {
@@ -108,5 +118,5 @@ struct SavingsView: View {
         .padding(.horizontal)
     }
     
+    
 }
-

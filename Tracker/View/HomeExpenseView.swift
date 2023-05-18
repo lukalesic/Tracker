@@ -7,44 +7,53 @@
 
 import SwiftUI
 
-struct MainTrackerView: View {
+struct HomeExpenseView: View {
     @StateObject var viewModel: ExpenseViewModel = .init()
     @State private var animateGradient : Bool = false
     var isFiltered: Bool = false
     
     var body: some View {
         NavigationView {
-            ZStack{
-                VStack{
-                    ScrollView {
-                        NavigationLink {
-                            DetailView()
-                                .environmentObject(viewModel)
-                        } label: {
-                            expenseCard()
+        
+            switch viewModel.dataState {
+            case .empty:
+                ProgressView()
+                    .onAppear {
+                        viewModel.fetchAllExpenses()
+                    }
+                
+            case .loading:
+                ProgressView()
+                
+            case .populated:
+                ZStack{
+                    VStack{
+                        ScrollView {
+                            NavigationLink {
+                                DetailView()
+                                    .environmentObject(viewModel)
+                            } label: {
+                                expenseCard()
+                            }
+                            transactionsView()
                         }
-                        transactionsView()
+                        
+                        .sheet(isPresented: $viewModel.addNew) {
+                            viewModel.clearData()
+                        } content: {
+                            NewExpenseView()
+                                .environmentObject(viewModel)
+                        }
                     }
                     
-                    .sheet(isPresented: $viewModel.addNew) {
-                        viewModel.clearData()
-                    } content: {
-                        NewExpenseView()
-                            .environmentObject(viewModel)
-                    }
                 }
-                
-            }
-            .navigationTitle("My expenses")
-            .onAppear {
-                viewModel.fetchAllExpenses()
+                .navigationTitle("My expenses")
             }
         }
-        
     }
 }
 
-extension MainTrackerView {
+extension HomeExpenseView {
     
     @ViewBuilder
     func transactionsView() -> some View {

@@ -19,6 +19,7 @@ import FirebaseFirestore
     @Published var amount: String = ""
     @Published var date: Date = Date()
     @Published var desc: String = ""
+    @Published var dataState: DataState = .empty
     
     private let db = Firestore.firestore()
     
@@ -40,9 +41,11 @@ import FirebaseFirestore
     }
     
     func fetchAllSavings() {
+        self.dataState = .loading
         Saving.fetchAll { [weak self] savings in
             DispatchQueue.main.async {
                 self?.savings = savings
+                self?.dataState = .populated
             }
         }
     }

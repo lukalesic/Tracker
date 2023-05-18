@@ -14,6 +14,7 @@ import FirebaseFirestore
     @Published var endDate: Date = Date()
     @Published var currentMonthStartDate: Date = Date()
     @Published var tabBarName : ExpenseType = .income
+    @Published var dataState: DataState = .empty
     
     //adding new expenses
     @Published var addNew: Bool = false
@@ -45,9 +46,11 @@ import FirebaseFirestore
      }
 
     func fetchAllExpenses() {
+        self.dataState = .loading
         Expense.fetchAll { [weak self] expenses in
             DispatchQueue.main.async {
                 self?.expenses = expenses
+                self?.dataState = .populated
             }
         }
     }
@@ -100,16 +103,5 @@ import FirebaseFirestore
         type = .all
         amount = ""
     }
-    
-//    func saveData(env: EnvironmentValues) {
-//        print ("Save")
-//        // MARK: This is For UI Demo
-//        let amountInDouble = (amount as NSString) .doubleValue
-//        let colors = ["Yellow", "Red", "Purple", "Green" ]
-//        let expense = Expense(description: desc, amount: amountInDouble, date: date, type: type, color: colors.randomElement () ?? "Yellow")
-//        withAnimation{expenses.append(expense)}
-//        expenses = expenses.sorted(by: { first, second in
-//        return second.date < first.date })
-//        env.dismiss ()
-//    }
+
 }
