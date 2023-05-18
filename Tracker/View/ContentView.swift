@@ -16,15 +16,14 @@ struct ContentView: View {
                 .tabItem {
                     Label("Home", systemImage: "house.fill")
             }
-//            DetailView()
-//                .tabItem {
-//                    Label("Details", systemImage: "gearshape.fill")
-//                }
-//            DetailView()
-//                .tabItem {
-//                    Label("Mjenacnica", systemImage: "gearshape.fill")
-//                }
-            
+            SavingsView()
+                .tabItem {
+                    Label("Savings", systemImage: "dollarsign")
+                }
+            ExchangeView()
+                .tabItem{
+                    Label("Exchange", systemImage: "dollarsign.arrow.circlepath")
+                }
             HomeScreenView()
                 .tabItem {
                     Label("Settings", systemImage: "gearshape.fill")

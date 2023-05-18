@@ -29,10 +29,9 @@ struct HomeScreenView: View {
     }
     
     var body: some View {
-        
-        VStack{
+        List {
             Button("Log out") {
-                withAnimation{
+                withAnimation {
                     logOut()
                     isActive = true
                 }
@@ -40,7 +39,7 @@ struct HomeScreenView: View {
         }
     }
 }
-
+    
 struct HomeScreenView_Previews: PreviewProvider {
     static var previews: some View {
         HomeScreenView()
