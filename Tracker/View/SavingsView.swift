@@ -80,7 +80,10 @@ extension SavingsView {
             .padding(.horizontal)
             .padding(.bottom)
         
-        ForEach(viewModel.savings) {saving in
+        ForEach(viewModel.savings.filter{
+            saving in
+            return saving.userID == viewModel.userID
+        }) {saving in
             SavingCard(saving: saving)
                 .environmentObject(viewModel)
         }
@@ -108,12 +111,9 @@ extension SavingsView {
             }
             .foregroundColor(.white)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-            
         }
         .frame(height: 180)
         .padding(.top)
         .padding(.horizontal)
     }
-    
-    
 }

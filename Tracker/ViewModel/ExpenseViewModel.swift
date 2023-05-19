@@ -7,6 +7,7 @@
 import SwiftUI
 import Foundation
 import FirebaseFirestore
+import FirebaseAuth
 
 @MainActor class ExpenseViewModel: ObservableObject {
     @Published var expenses: [Expense] = []
@@ -22,24 +23,29 @@ import FirebaseFirestore
     @Published var type: ExpenseType = .all
     @Published var date: Date = Date()
     @Published var desc: String = ""
+    @Published var detailDesc: String = ""
+    let userID = Auth.auth().currentUser?.uid
     
     private let db = Firestore.firestore()
      
      func saveData(env: EnvironmentValues) {
          let expensesCollection = db.collection("expenses")
-         let newExpense = Expense(description: desc, amount: Double(amount) ?? 0, date: date, type: type, color: "Yellow")
+         let newExpense = Expense(description: desc, detailDescription: detailDesc, amount: Double(amount) ?? 0, date: date, type: type, color: "Yellow", userID: self.userID ?? "")
          let expenseDict: [String: Any] = [
              "description": newExpense.description,
+             "detailDescription": newExpense.detailDescription,
              "amount": newExpense.amount,
              "date": newExpense.date,
              "type": newExpense.type.rawValue,
-             "color": newExpense.color
+             "color": newExpense.color,
+             "userID": newExpense.userID
          ]
 
          do {
              _ = try expensesCollection.addDocument(data: expenseDict)
              expenses.append(newExpense)
              env.dismiss()
+             print(userID)
          } catch {
              print("Error writing expense to Firestore: \(error)")
          }

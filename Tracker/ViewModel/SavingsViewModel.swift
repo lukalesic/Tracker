@@ -7,6 +7,7 @@
 import SwiftUI
 import Foundation
 import FirebaseFirestore
+import FirebaseAuth
 
 @MainActor class SavingsViewModel: ObservableObject {
     @Published var savings: [Saving] = []
@@ -20,12 +21,13 @@ import FirebaseFirestore
     @Published var date: Date = Date()
     @Published var desc: String = ""
     @Published var dataState: DataState = .empty
+    let userID = Auth.auth().currentUser?.uid
     
     private let db = Firestore.firestore()
     
     func saveData(env: EnvironmentValues) {
         let savingsCollection = db.collection("savings")
-        let newSaving = Saving(amount: Double(amount) ?? 0, date: date)
+        let newSaving = Saving(amount: Double(amount) ?? 0, date: date, userID: userID ?? "")
         let savingDict: [String: Any] = [
             "amount": newSaving.amount,
             "date": newSaving.date

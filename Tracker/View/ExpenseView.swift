@@ -86,14 +86,16 @@ extension HomeExpenseView {
             .padding(.horizontal)
             .padding(.bottom)
         
-        ForEach(viewModel.expenses) {expense in
-            NavigationLink {
-                TransactionDetailScreen(expense: expense)
-            } label: {
-                TransactionCard(expense: expense)
-                    .environmentObject(viewModel)
-            }
-            .buttonStyle(.plain)
+        ForEach(viewModel.expenses.filter({ expense in
+            return expense.userID == viewModel.userID
+        })) { expense in
+            NavigationLink(
+                destination: TransactionDetailScreen(expense: expense),
+                label: {
+                    TransactionCard(expense: expense)
+                        .environmentObject(viewModel)
+                })
+                .buttonStyle(.plain)
         }
     }
     

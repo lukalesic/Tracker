@@ -10,14 +10,13 @@ import Firebase
 import ModalView
 
 struct LoginView: View {
-    @State private var email = ""
-    @State private var password = ""
-    @AppStorage("uid") var userID = ""
-    
+    @StateObject private var loginViewModel = AccountViewModel()
+    @State private var showErrorAlert = false
+
     var body: some View {
         NavigationStack{
             ModalPresenter{
-                if userID == "" {
+                if loginViewModel.userID == "" {
                     content()
                 } else
                 {
@@ -25,8 +24,17 @@ struct LoginView: View {
                 }
             }
         }
+        .alert(isPresented: $showErrorAlert) {
+                  Alert(
+                      title: Text("Error"),
+                      message: Text(loginViewModel.loginError ?? ""),
+                      dismissButton: .default(Text("OK"))
+                  )
+              }
+              .onChange(of: loginViewModel.loginError) { error in
+                  showErrorAlert = error != nil
+            }
     }
-
 }
 
 extension LoginView {
@@ -76,7 +84,7 @@ extension LoginView {
     
     @ViewBuilder
     func emailInput() -> some View {
-        TextField("Email", text: $email)
+        TextField("Email", text: $loginViewModel.email)
             .frame(height: 55)
             .textFieldStyle(PlainTextFieldStyle())
             .padding([.horizontal], 10)
@@ -87,7 +95,7 @@ extension LoginView {
     
     @ViewBuilder
     func passwordInput() -> some View {
-        SecureField("Password", text: $password)
+        SecureField("Password", text: $loginViewModel.password)
             .frame(height: 55)
             .textFieldStyle(PlainTextFieldStyle())
             .padding([.horizontal], 10)
@@ -99,27 +107,12 @@ extension LoginView {
     @ViewBuilder
     func loginButton() -> some View {
         Button {
-            login()
+            loginViewModel.login()
         } label: {
             Text("Firebase login")
         }
         .buttonStyle(.borderedProminent)
         .padding(.vertical, 12)
-    }
-    
-    func login() {
-        Auth.auth().signIn(withEmail: email, password: password) { (result, error) in
-            if error != nil {
-                print(error?.localizedDescription ?? "")
-            } else {
-                print("success")
-            }
-            if let result = result {
-                withAnimation {
-                    userID = result.user.uid
-                }
-            }
-        }
     }
 }
 

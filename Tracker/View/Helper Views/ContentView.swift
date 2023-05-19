@@ -28,9 +28,7 @@ struct ContentView: View {
                 .tabItem {
                     Label("Settings", systemImage: "gearshape.fill")
                 }
-         
-            
-        }        .environmentObject(viewModel) // set the environmentObject modifier on the TabView
+        }        .environmentObject(viewModel)
 
     }
 }

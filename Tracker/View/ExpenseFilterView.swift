@@ -27,7 +27,6 @@ struct DetailView: View {
     }
 }
 
-
 extension DetailView{
     
     @ViewBuilder
@@ -93,7 +92,7 @@ extension DetailView{
             let expenseDate = expense.date
             return expense.type == viewModel.tabBarName &&
             expenseDate >= viewModel.startDate &&
-            expenseDate <= viewModel.endDate
+            expenseDate <= viewModel.endDate && expense.userID == viewModel.userID
         }) { expense in
             TransactionCard(expense: expense)
                 .environmentObject(viewModel)

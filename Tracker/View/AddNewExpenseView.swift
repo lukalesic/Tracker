@@ -16,6 +16,7 @@ struct NewExpenseView: View {
                 titleText()
                 amountTextfield()
                 descriptionText()
+                detailDescriptionText()
                 datePicker()
                 checkboxSelection()
                 Spacer()
@@ -48,10 +49,10 @@ extension NewExpenseView {
                         .font(.system(size: 35))
                         .opacity(0)
                         .overlay(alignment: .trailing) {
-                        Text("€")
+                            Text("€")
                                 .opacity (0.5)
                                 .offset(x: 15, y: 0)
-                    }
+                        }
                 }
                 .padding()
                 .frame(maxWidth: .infinity)
@@ -61,6 +62,12 @@ extension NewExpenseView {
     @ViewBuilder
     func descriptionText() -> some View {
         TextField("Description", text: $viewModel.desc)
+            .padding()
+            .textFieldStyle(.roundedBorder)
+    }
+    
+    func detailDescriptionText() -> some View {
+        TextField("Detail Description", text: $viewModel.detailDesc)
             .padding()
             .textFieldStyle(.roundedBorder)
     }
@@ -78,7 +85,8 @@ extension NewExpenseView {
         }
     }
     
-    @ViewBuilder func checkboxSelection() -> some View {
+    @ViewBuilder
+    func checkboxSelection() -> some View {
         HStack(spacing: 10){
             ForEach( [ExpenseType.income, ExpenseType.expense], id: \.self){type in
                 ZStack{

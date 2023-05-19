@@ -13,7 +13,6 @@ struct TransactionCard: View {
     @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
-        //fotka expense ili income
         HStack {
             Text(expense.description)
                 .fontWeight(.semibold)

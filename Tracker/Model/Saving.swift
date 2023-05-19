@@ -5,26 +5,30 @@ struct Saving: Identifiable, Hashable {
     var id = UUID().uuidString
     var amount: Double
     var date: Date
-    
+    var userID: String
+
     private var savingsCollection: CollectionReference {
         return Firestore.firestore().collection("savings")
     }
     
-    init(amount: Double, date: Date) {
+    init(amount: Double, date: Date, userID: String) {
         self.amount = amount
         self.date = date
+        self.userID = userID
     }
     
-    init(id: String, amount: Double, date: Date) {
+    init(id: String, amount: Double, date: Date, userID:String) {
         self.id = id
         self.amount = amount
         self.date = date
+        self.userID = userID
     }
     
     func save() {
         let savingData: [String: Any] = [
             "amount": amount,
-            "date": Timestamp(date: date)
+            "date": Timestamp(date: date),
+            "userID": userID
         ]
         
         savingsCollection.addDocument(data: savingData)
@@ -46,7 +50,8 @@ struct Saving: Identifiable, Hashable {
             
             let savings = snapshot.documents.compactMap { document -> Saving? in
                 guard let amount = document.get("amount") as? Double,
-                      let dateTimestamp = document.get("date") as? Timestamp
+                      let dateTimestamp = document.get("date") as? Timestamp,
+                      let userID = document.get("userID") as? String
                 else {
                     return nil
                 }
@@ -54,7 +59,8 @@ struct Saving: Identifiable, Hashable {
                 let saving = Saving(
                     id: document.documentID,
                     amount: amount,
-                    date: dateTimestamp.dateValue()
+                    date: dateTimestamp.dateValue(),
+                    userID: userID
                 )
                 
                 return saving

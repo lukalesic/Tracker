@@ -13,6 +13,7 @@ struct TransactionDetailScreen: View {
     var body: some View {
         VStack {
             expenseDescription()
+            expenseDetailDescription()
             expenseAmount()
             expenseType()
             expenseDate()
@@ -27,6 +28,13 @@ private extension TransactionDetailScreen {
         Text(expense.description)
             .font(.title)
             .fontWeight(.bold)
+            .padding()
+    }
+    
+    @ViewBuilder
+    func expenseDetailDescription() -> some View {
+        Text(expense.detailDescription)
+            .font(.subheadline)
             .padding()
     }
     

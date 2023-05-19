@@ -10,11 +10,7 @@ import SwiftUI
 struct ExchangeView: View {
     
     @ObservedObject var viewModel = ExchangeViewModel()
-    @State private var amount = ""
-    @State private var baseCurrency = "USD"
-    @State private var secondCurrency = "EUR"
     @State private var showBaseCurrencyPicker = false
-    @State private var result = ""
     
     var body: some View {
         NavigationView{
@@ -44,7 +40,7 @@ extension ExchangeView {
     
     @ViewBuilder
     func initialCurrencyPicker() -> some View {
-        Picker("Initial currency", selection: $baseCurrency) {
+        Picker("Initial currency", selection: $viewModel.baseCurrency) {
             ForEach(viewModel.results?.rates.keys.sorted() ?? [], id: \.self) { key in
                 Text(key)
             }
@@ -53,7 +49,7 @@ extension ExchangeView {
     
     @ViewBuilder
     func destinationCurrencyPicker() -> some View {
-        Picker("Destination currency", selection: $secondCurrency){
+        Picker("Destination currency", selection: $viewModel.secondCurrency){
             ForEach(viewModel.results?.rates.keys.sorted() ?? [], id: \.self) {key in
                 Text(key)
             }
@@ -63,7 +59,7 @@ extension ExchangeView {
     
     @ViewBuilder
     func amountTextField() -> some View {
-        TextField("Enter amount", text: $amount)
+        TextField("Enter amount", text: $viewModel.amount)
             .keyboardType(.decimalPad)
             .textFieldStyle(.roundedBorder)
     }
@@ -71,27 +67,16 @@ extension ExchangeView {
    @ViewBuilder
     func convertButton() -> some View {
         Button("Convert") {
-            convert()
+            viewModel.convert()
         }
         .buttonStyle(.borderedProminent)
-        .disabled(viewModel.results == nil || amount == "")
+        .disabled(viewModel.results == nil || viewModel.amount == "")
     }
     
     @ViewBuilder
     func resultText() -> some View {
-        Text("\(result)")
+        Text("\(viewModel.result)")
             .padding(.top, 12)
             .font(.largeTitle)
-    }
-    
-    func convert()  {
-        guard let amount = Double(amount),
-              let baseRate = viewModel.results?.rates[baseCurrency], let destinationRate = viewModel.results?.rates[secondCurrency]
-        else {return}
-        
-        var doubleResult = 0.0
-        doubleResult = ((amount / baseRate) * destinationRate)
-        let formattedString = String(format: "%.2f", doubleResult)
-        result = "\(formattedString) \(secondCurrency)"
     }
 }

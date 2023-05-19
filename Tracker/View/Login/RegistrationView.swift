@@ -9,9 +9,10 @@ import SwiftUI
 import Firebase
 
 struct RegistrationView: View {
-    @State private var email = ""
-    @State private var password = ""
     @State private var userIsLoggedIn = false
+    @State private var showErrorAlert = false
+    @StateObject private var viewModel = AccountViewModel()
+
     var dismiss: () -> ()
 
     var body: some View {
@@ -25,6 +26,16 @@ struct RegistrationView: View {
         }
         .onAppear{
             self.userIsLoggedIn = false
+        }
+        .alert(isPresented: $showErrorAlert) {
+            Alert(
+                title: Text("Error"),
+                message: Text(viewModel.registrationError ?? ""),
+                dismissButton: .default(Text("OK"))
+            )
+        }
+        .onChange(of: viewModel.registrationError) { error in
+            showErrorAlert = error != nil
         }
     }
 }
@@ -62,7 +73,7 @@ extension RegistrationView {
     
     @ViewBuilder
     func emailField() -> some View {
-        TextField("Email", text: $email)
+        TextField("Email", text: $viewModel.email)
             .frame(height: 55)
             .textFieldStyle(PlainTextFieldStyle())
             .padding([.horizontal], 10)
@@ -73,7 +84,7 @@ extension RegistrationView {
     
     @ViewBuilder
     func passwordField() -> some View {
-        SecureField("Password", text: $password)
+        SecureField("Password", text: $viewModel.password)
             .frame(height: 55)
             .textFieldStyle(PlainTextFieldStyle())
             .padding([.horizontal], 10)
@@ -85,21 +96,11 @@ extension RegistrationView {
     @ViewBuilder
     func registerButton() -> some View {
         Button {
-            register()
+            viewModel.register()
         } label: {
             Text("Register")
         }
         .buttonStyle(.borderedProminent)
         .padding(.vertical, 12)
-    }
-    
-    func register() {
-        Auth.auth().createUser(withEmail: email, password: password) {(result, error) in
-            if error != nil {
-                print(error?.localizedDescription ?? "")
-            } else {
-                print("success")
-            }
-        }
     }
 }
