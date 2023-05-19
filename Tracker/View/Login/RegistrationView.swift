@@ -20,7 +20,7 @@ struct RegistrationView: View {
                 ContentView()
             } else
             {
-                content
+                registrationContent()
             }
         }
         .onAppear{
