@@ -27,66 +27,70 @@ struct RegistrationView: View {
             self.userIsLoggedIn = false
         }
     }
+}
+
+extension RegistrationView {
     
-    var content: some View {
+    @ViewBuilder
+    func registrationContent() -> some View {
         ZStack {
             VStack(spacing: 10){
-                HStack{
-                    Text("Registration")
-                        .font(.largeTitle)
-                        .fontWeight(.bold)
-                        .padding(.top, 15)
-                    Spacer()
-                    Button(action: dismiss) {
-                              Text("Cancel")
-                          }
-                    .padding(.top, 15)
-
-                }
+                title()
                 Spacer()
-                TextField("Email", text: $email)
-                    .frame(height: 55)
-                    .textFieldStyle(PlainTextFieldStyle())
-                    .padding([.horizontal], 10)
-                    .cornerRadius(16)
-                    .overlay(RoundedRectangle(cornerRadius: 16).stroke(Color.gray))
-                    .padding([.horizontal], 24)
-                
-                SecureField("Password", text: $password)
-                    .frame(height: 55)
-                    .textFieldStyle(PlainTextFieldStyle())
-                    .padding([.horizontal], 10)
-                    .cornerRadius(16)
-                    .overlay(RoundedRectangle(cornerRadius: 16).stroke(Color.gray))
-                    .padding([.horizontal], 24)
-                
-                Button {
-                    register()
-                } label: {
-                    Text("Register")
-                }
-                .buttonStyle(.borderedProminent)
-                .padding(.vertical, 12)
-                
-                
-//                Button {
-//                    register()
-//                } label: {
-//                    Text("Firebase register")
-//                }
-//                .buttonStyle(.borderedProminent)
-                
-                
-//                .onAppear {
-//                    Auth.auth().addStateDidChangeListener { auth, user in
-//                        if user != nil {
-//                            userIsLoggedIn.toggle()
-//                        }
-//                    }
- //               }
+                emailField()
+                passwordField()
+                registerButton()
                 Spacer()
             }.padding(.horizontal)
         }
+    }
+    
+    @ViewBuilder
+    func title() -> some View {
+        HStack{
+            Text("Registration")
+                .font(.largeTitle)
+                .fontWeight(.bold)
+                .padding(.top, 15)
+            Spacer()
+            Button(action: dismiss) {
+                      Text("Cancel")
+                  }
+            .padding(.top, 15)
+        }
+    }
+    
+    @ViewBuilder
+    func emailField() -> some View {
+        TextField("Email", text: $email)
+            .frame(height: 55)
+            .textFieldStyle(PlainTextFieldStyle())
+            .padding([.horizontal], 10)
+            .cornerRadius(16)
+            .overlay(RoundedRectangle(cornerRadius: 16).stroke(Color.gray))
+            .padding([.horizontal], 24)
+    }
+    
+    @ViewBuilder
+    func passwordField() -> some View {
+        SecureField("Password", text: $password)
+            .frame(height: 55)
+            .textFieldStyle(PlainTextFieldStyle())
+            .padding([.horizontal], 10)
+            .cornerRadius(16)
+            .overlay(RoundedRectangle(cornerRadius: 16).stroke(Color.gray))
+            .padding([.horizontal], 24)
+    }
+    
+    @ViewBuilder
+    func registerButton() -> some View {
+        Button {
+            register()
+        } label: {
+            Text("Register")
+        }
+        .buttonStyle(.borderedProminent)
+        .padding(.vertical, 12)
     }
     
     func register() {
@@ -98,5 +102,4 @@ struct RegistrationView: View {
             }
         }
     }
-    
 }

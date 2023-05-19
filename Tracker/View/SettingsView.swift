@@ -29,13 +29,16 @@ struct HomeScreenView: View {
     }
     
     var body: some View {
-        List {
-            Button("Log out") {
-                withAnimation {
-                    logOut()
-                    isActive = true
+        NavigationView{
+            List {
+                Button("Log out") {
+                    withAnimation {
+                        logOut()
+                        isActive = true
+                    }
                 }
             }
+            .navigationTitle("Settings")
         }
     }
 }

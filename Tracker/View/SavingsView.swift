@@ -42,7 +42,7 @@ struct SavingsView: View {
                     }
                     
                 }
-                .navigationTitle("My expenses")
+                .navigationTitle("My savings")
             }
         }
     }
@@ -59,8 +59,6 @@ extension SavingsView {
                     .opacity (0.7)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 
-                
-                
                 Button {
                     viewModel.addNew = true
                     
@@ -74,7 +72,6 @@ extension SavingsView {
                                 .fill(
                                     Color.cyan
                                 )
-                            
                         )
                 }.shadow(radius: 12)
             }
@@ -96,7 +93,7 @@ extension SavingsView {
                 .fill(
                     Color.gray
                 )
-                .opacity(0.6)
+                .opacity(0.4)
                 .shadow(radius: 12)
             
             
