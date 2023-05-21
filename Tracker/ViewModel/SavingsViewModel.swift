@@ -23,16 +23,17 @@ import FirebaseAuth
     @Published var dataState: DataState = .empty
     let userID = Auth.auth().currentUser?.uid
     
-    private let db = Firestore.firestore()
+    let db = Firestore.firestore()
     
     func saveData(env: EnvironmentValues) {
         let savingsCollection = db.collection("savings")
         let newSaving = Saving(amount: Double(amount) ?? 0, date: date, userID: userID ?? "")
         let savingDict: [String: Any] = [
             "amount": newSaving.amount,
-            "date": newSaving.date
+            "date": Timestamp(date: newSaving.date),
+            "userID": newSaving.userID
         ]
-        
+
         do {
             _ = try savingsCollection.addDocument(data: savingDict)
             savings.append(newSaving)
@@ -40,7 +41,7 @@ import FirebaseAuth
         } catch {
             print("Error writing saving to Firestore: \(error)")
         }
-    }
+    }    
     
     func fetchAllSavings() {
         self.dataState = .loading
@@ -50,6 +51,13 @@ import FirebaseAuth
                 self?.dataState = .populated
             }
         }
+    }
+    
+    func convertNumberToPrice(value: Double) -> String {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.currencyCode = "EUR"
+        return formatter.string(from: .init(value: value)) ?? "0 EUR"
     }
     
     init() {
@@ -69,12 +77,6 @@ import FirebaseAuth
         return convertNumberToPrice(value: sum)
     }
     
-    func convertNumberToPrice(value: Double) -> String {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .currency
-        formatter.currencyCode = "EUR"
-        return formatter.string(from: .init(value: value)) ?? "0 EUR"
-    }
     
     func clearData() {
         date = Date()

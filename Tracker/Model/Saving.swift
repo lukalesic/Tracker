@@ -35,7 +35,7 @@ struct Saving: Identifiable, Hashable {
     }
     
     static func fetchAll(completion: @escaping ([Saving]) -> Void) {
-        Firestore.firestore().collection("savings").getDocuments { (snapshot, error) in
+        Firestore.firestore().collection("savings").whereField("userID", isEqualTo: Auth.auth().currentUser?.uid ?? "").getDocuments { (snapshot, error) in
             if let error = error {
                 print("Error fetching savings: \(error)")
                 completion([])

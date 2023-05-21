@@ -4,6 +4,7 @@
 //
 //  Created by Luka Lešić on 30.04.2023..
 //
+//
 import SwiftUI
 import Foundation
 import FirebaseFirestore
@@ -61,6 +62,22 @@ import FirebaseAuth
         }
     }
 
+    
+    func deleteExpense(at index: Int) {
+        let expense = expenses[index]
+        
+        expenses.remove(at: index)
+        
+        let expenseRef = db.collection("expenses").document(expense.id)
+        expenseRef.delete { error in
+            if let error = error {
+                print("Error deleting expense document: \(error)")
+                self.expenses.insert(expense, at: index)
+            }
+        }
+    }
+
+    
     init () {
         // MARK: Fetching Current Month Starting Date
         let calendar = Calendar.current
@@ -74,24 +91,18 @@ import FirebaseAuth
     }
     
     func returnIncome(type: ExpenseType = .income) -> String {
-        var sum : Double = 0.0
-        for expense in expenses {
-            if expense.type == type {
-                sum += expense.amount
-            }
-        }
+        let currentUserExpenses = expenses.filter { $0.userID == self.userID && $0.type == type }
+        let sum = currentUserExpenses.reduce(0) { $0 + $1.amount }
         return convertNumberToPrice(value: sum)
     }
-    
+
     
     func convertExpensesToCurrency(expenses: [Expense], type: ExpenseType = .expense) -> String {
-        var value: Double = 0
-        value = expenses.reduce(0, { partialResult, expense in
-            return partialResult + (expense.type == .income ? expense.amount : -expense.amount)
-        })
-        return convertNumberToPrice(value: value)
+        let currentUserExpenses = expenses.filter { $0.userID == self.userID }
+        let sum = currentUserExpenses.reduce(0) { $0 + $1.amount }
+        return convertNumberToPrice(value: sum)
     }
-    
+
     func convertDateToString() -> String {
         return startDate.formatted(date: .abbreviated, time: .omitted) + " - " + endDate.formatted(date: .abbreviated, time: .omitted)
     }

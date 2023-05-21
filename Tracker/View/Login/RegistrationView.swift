@@ -12,6 +12,7 @@ struct RegistrationView: View {
     @State private var userIsLoggedIn = false
     @State private var showErrorAlert = false
     @StateObject private var viewModel = AccountViewModel()
+    @State private var showSuccessAlert = false
 
     var dismiss: () -> ()
 
@@ -36,6 +37,17 @@ struct RegistrationView: View {
         }
         .onChange(of: viewModel.registrationError) { error in
             showErrorAlert = error != nil
+        }
+        
+        .alert(isPresented: $showSuccessAlert) {
+            Alert(
+                title: Text("Success!"),
+                message: Text(viewModel.successMessage ?? ""),
+                dismissButton: .default(Text("OK"))
+            )
+        }
+        .onChange(of: viewModel.successMessage) { message in
+            showSuccessAlert = viewModel.successMessage != nil
         }
     }
 }

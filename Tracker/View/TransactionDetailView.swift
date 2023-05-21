@@ -9,6 +9,8 @@ import SwiftUI
 
 struct TransactionDetailScreen: View {
     var expense: Expense
+    @EnvironmentObject var viewModel: ExpenseViewModel
+
     
     var body: some View {
         VStack {
@@ -18,6 +20,9 @@ struct TransactionDetailScreen: View {
             expenseType()
             expenseDate()
             Spacer()
+            deleteButton()
+                .padding()
+
         }
     }
 }
@@ -70,4 +75,25 @@ private extension TransactionDetailScreen {
         }
         .padding(.vertical)
     }
+    
+    @ViewBuilder
+    func deleteButton() -> some View {
+        Button(action: {
+            deleteExpense()
+        }) {
+            Text("Delete")
+                .foregroundColor(.white)
+                .padding()
+                .background(Color.red)
+                .cornerRadius(8)
+        }
+    }
+    
+    func deleteExpense() {
+        guard let index = viewModel.expenses.firstIndex(of: expense) else {
+            return
+        }
+        viewModel.deleteExpense(at: index)
+    }
+
 }

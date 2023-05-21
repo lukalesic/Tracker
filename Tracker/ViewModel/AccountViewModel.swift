@@ -16,6 +16,7 @@ class AccountViewModel: ObservableObject {
     @AppStorage("uid") var userID = ""
     @Published var loginError: String?
     @Published var registrationError: String?
+    @Published var successMessage: String?
 
 
     func login() {
@@ -40,6 +41,7 @@ class AccountViewModel: ObservableObject {
                 self.registrationError = error?.localizedDescription ?? ""
             } else {
                 self.registrationError = nil
+                self.successMessage = "Successfully registered! You may now login."
             }
         }
     }

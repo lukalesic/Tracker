@@ -90,7 +90,7 @@ extension HomeExpenseView {
             return expense.userID == viewModel.userID
         })) { expense in
             NavigationLink(
-                destination: TransactionDetailScreen(expense: expense),
+                destination: TransactionDetailScreen(expense: expense).environmentObject(viewModel),
                 label: {
                     TransactionCard(expense: expense)
                         .environmentObject(viewModel)
