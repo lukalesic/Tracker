@@ -94,8 +94,12 @@ extension DetailView{
             expenseDate >= viewModel.startDate &&
             expenseDate <= viewModel.endDate && expense.userID == viewModel.userID
         }) { expense in
-            TransactionCard(expense: expense)
-                .environmentObject(viewModel)
+            NavigationLink(destination: TransactionDetailScreen(expense: expense).environmentObject(viewModel), label: {
+                TransactionCard(expense: expense)
+                    .environmentObject(viewModel)
+            })
+            .buttonStyle(.plain)
+
         }
     }
     

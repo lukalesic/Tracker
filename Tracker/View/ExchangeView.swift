@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct ExchangeView: View {
-    
+    @State private var isKeyboardVisible = false
+
     @ObservedObject var viewModel = ExchangeViewModel()
     @State private var showBaseCurrencyPicker = false
     
@@ -59,9 +60,32 @@ extension ExchangeView {
     
     @ViewBuilder
     func amountTextField() -> some View {
-        TextField("Enter amount", text: $viewModel.amount)
-            .keyboardType(.decimalPad)
-            .textFieldStyle(.roundedBorder)
+        ZStack(alignment: .bottom) {
+            TextField("Enter amount", text: $viewModel.amount)
+                .keyboardType(.decimalPad)
+                .textFieldStyle(.roundedBorder)
+            
+            if isKeyboardVisible {
+                HStack {
+                    Spacer()
+                    Button("OK") {
+                        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                    }
+                    .padding(.bottom, 5)
+                    .padding(.trailing, 4)
+                }
+            }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)) { _ in
+            withAnimation {
+                isKeyboardVisible = true
+            }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)) { _ in
+            withAnimation {
+                isKeyboardVisible = false
+            }
+        }
     }
     
    @ViewBuilder
