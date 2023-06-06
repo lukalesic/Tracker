@@ -94,9 +94,27 @@
 				DFA7D49B29FECD8200A9D30C /* TransactionCard.swift */,
 				DFC8B1832A163F73005E3A1D /* SavingCard.swift */,
 				DFEA0FDF29F18119000F042C /* SettingsView.swift */,
-				DFF0E10329F0C5E200FFDC8D /* ContentView.swift */,
 			);
 			path = "Helper Views";
+			sourceTree = "<group>";
+		};
+		DFC221D42A2FA9C40044F57A /* ExpenseView */ = {
+			isa = PBXGroup;
+			children = (
+				DFA7D49429FEB8B700A9D30C /* ExpenseView.swift */,
+				DFA7D49F29FEFBA000A9D30C /* ExpenseFilterView.swift */,
+				DFA7D4A129FFF1F100A9D30C /* AddNewExpenseView.swift */,
+			);
+			path = ExpenseView;
+			sourceTree = "<group>";
+		};
+		DFC221D52A2FA9EE0044F57A /* SavingsView */ = {
+			isa = PBXGroup;
+			children = (
+				DFC8B17C2A163930005E3A1D /* SavingsView.swift */,
+				DFC8B1852A164080005E3A1D /* NewSavingsView.swift */,
+			);
+			path = SavingsView;
 			sourceTree = "<group>";
 		};
 		DFC8B17E2A163962005E3A1D /* Login */ = {
@@ -158,14 +176,12 @@
 		DFF0E11E29F0CE4400FFDC8D /* View */ = {
 			isa = PBXGroup;
 			children = (
+				DFF0E10329F0C5E200FFDC8D /* ContentView.swift */,
 				DFC8B17E2A163962005E3A1D /* Login */,
+				DFC221D42A2FA9C40044F57A /* ExpenseView */,
+				DFC221D52A2FA9EE0044F57A /* SavingsView */,
 				DFA7D49A29FECD7200A9D30C /* Helper Views */,
-				DFA7D49F29FEFBA000A9D30C /* ExpenseFilterView.swift */,
-				DFA7D49429FEB8B700A9D30C /* ExpenseView.swift */,
-				DFA7D4A129FFF1F100A9D30C /* AddNewExpenseView.swift */,
 				DF21DCDD2A05C35500043381 /* ExchangeView.swift */,
-				DFC8B17C2A163930005E3A1D /* SavingsView.swift */,
-				DFC8B1852A164080005E3A1D /* NewSavingsView.swift */,
 				DFC8B1872A16C870005E3A1D /* TransactionDetailView.swift */,
 			);
 			path = View;
@@ -175,8 +191,8 @@
 			isa = PBXGroup;
 			children = (
 				DFEA0FD829F16EB9000F042C /* AccountViewModel.swift */,
-				DFA7D49829FEB9D200A9D30C /* ExpenseViewModel.swift */,
 				DF21DCE12A05CB2800043381 /* ExchangeViewModel.swift */,
+				DFA7D49829FEB9D200A9D30C /* ExpenseViewModel.swift */,
 				DFC8B17F2A1639CA005E3A1D /* SavingsViewModel.swift */,
 			);
 			path = ViewModel;

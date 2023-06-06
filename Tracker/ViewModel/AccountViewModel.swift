@@ -18,7 +18,6 @@ class AccountViewModel: ObservableObject {
     @Published var registrationError: String?
     @Published var successMessage: String?
 
-
     func login() {
         Auth.auth().signIn(withEmail: email, password: password) { (result, error) in
             if error != nil {

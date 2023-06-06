@@ -62,12 +62,9 @@ import FirebaseAuth
         }
     }
 
-    
     func deleteExpense(at index: Int) {
         let expense = expenses[index]
-        
         expenses.remove(at: index)
-        
         let expenseRef = db.collection("expenses").document(expense.id)
         expenseRef.delete { error in
             if let error = error {
@@ -77,7 +74,6 @@ import FirebaseAuth
         }
     }
 
-    
     init () {
         // MARK: Fetching Current Month Starting Date
         let calendar = Calendar.current
@@ -91,11 +87,33 @@ import FirebaseAuth
     }
     
     func returnIncome(type: ExpenseType = .income) -> String {
-        let currentUserExpenses = expenses.filter { $0.userID == self.userID && $0.type == type }
+        let currentUserExpenses = expenses.filter { $0.userID == self.userID && $0.type == type && $0.date >= startDate && $0.date <= endDate}
         let sum = currentUserExpenses.reduce(0) { $0 + $1.amount }
         return convertNumberToPrice(value: sum)
     }
-
+    
+    func returnTotal(expenses: [Expense]) -> String {
+        let currentUserExpenses = expenses.filter { $0.userID == self.userID }
+        
+        let totalIncome = currentUserExpenses.reduce(0) { result, expense in
+            if expense.type == .income {
+                return result + expense.amount
+            } else {
+                return result
+            }
+        }
+        
+        let totalExpense = currentUserExpenses.reduce(0) { result, expense in
+            if expense.type == .expense {
+                return result + expense.amount
+            } else {
+                return result
+            }
+        }
+        
+        let total = totalIncome - totalExpense
+        return convertNumberToPrice(value: total)
+    }
     
     func convertExpensesToCurrency(expenses: [Expense], type: ExpenseType = .expense) -> String {
         let currentUserExpenses = expenses.filter { $0.userID == self.userID }

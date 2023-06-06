@@ -59,11 +59,9 @@ extension LoginView {
                         .font(.footnote)
                         .buttonStyle(PlainButtonStyle())
                 }
-                
-                    Spacer()
+                Spacer()
             }.padding(.horizontal)
         }
-        
     }
     
     @ViewBuilder

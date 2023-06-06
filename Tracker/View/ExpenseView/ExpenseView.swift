@@ -1,67 +1,70 @@
 //
-//  SavingsView.swift
+//  MainTrackerView.swift
 //  Tracker
 //
-//  Created by Luka Lešić on 18.05.2023..
+//  Created by Luka Lešić on 30.04.2023..
 //
 
 import SwiftUI
 
-struct SavingsView: View {
-    @StateObject var viewModel: SavingsViewModel = .init()
+struct HomeExpenseView: View {
+    @StateObject var viewModel: ExpenseViewModel = .init()
+    @State private var animateGradient : Bool = false
     var isFiltered: Bool = false
     
-    var body: some View
-    {
+    var body: some View {
         NavigationView {
-            
+        
             switch viewModel.dataState {
             case .empty:
                 ProgressView()
                     .onAppear {
-                        viewModel.fetchAllSavings()
+                        viewModel.fetchAllExpenses()
                     }
                 
             case .loading:
                 ProgressView()
                 
             case .populated:
-                
                 ZStack{
                     VStack{
                         ScrollView {
-                            savingsCard()
+                            NavigationLink {
+                                DetailView()
+                                    .environmentObject(viewModel)
+                            } label: {
+                                expenseCard()
+                            }
                             transactionsView()
                         }
+                        
                         .sheet(isPresented: $viewModel.addNew) {
                             viewModel.clearData()
                         } content: {
-                            NewSavingView()
+                            NewExpenseView()
                                 .environmentObject(viewModel)
                         }
                     }
-                    
                 }
-                .navigationTitle("My savings")
+                .navigationTitle("My expenses")
             }
         }
     }
 }
 
-extension SavingsView {
+extension HomeExpenseView {
     
     @ViewBuilder
     func transactionsView() -> some View {
         VStack{
             HStack{
-                Text("Savings")
+                Text("Transactions")
                     .font (.title2.bold())
                     .opacity (0.7)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 
                 Button {
                     viewModel.addNew = true
-                    
                 } label: {
                     Image(systemName: "plus")
                         .font(.system(size: 20))
@@ -74,39 +77,55 @@ extension SavingsView {
                                 )
                         )
                 }.shadow(radius: 12)
+                
             }
             
         } .padding(.top)
             .padding(.horizontal)
             .padding(.bottom)
         
-        ForEach(viewModel.savings.filter{
-            saving in
-            return saving.userID == viewModel.userID
-        }) {saving in
-            SavingCard(saving: saving)
-                .environmentObject(viewModel)
+        ForEach(viewModel.expenses.filter({ expense in
+            return expense.userID == viewModel.userID
+        })) { expense in
+            NavigationLink(
+                destination: TransactionDetailScreen(expense: expense).environmentObject(viewModel),
+                label: {
+                    TransactionCard(expense: expense)
+                        .environmentObject(viewModel)
+                })
+                .buttonStyle(.plain)
         }
     }
     
     @ViewBuilder
-    func savingsCard() -> some View {
+    func expenseCard() -> some View {
         GeometryReader { proxy in
             RoundedRectangle(cornerRadius: 20, style: .continuous)
                 .fill(
-                    Color.gray
+                    .linearGradient(colors: [Color.blue, Color.yellow, Color.pink], startPoint: animateGradient ? .topLeading : .bottomLeading, endPoint: animateGradient ? .topTrailing: .bottomTrailing)
                 )
-                .opacity(0.4)
                 .shadow(radius: 12)
-            
+                .hueRotation(.degrees(animateGradient ? 90 : 0))
+                .onAppear {
+                    withAnimation (.easeInOut(duration: 4).repeatForever(autoreverses: true)) {
+                        animateGradient.toggle()
+                    }
+                }
             
             VStack{
                 VStack{
-                    Text("Currently saved up:")
-                    Text(viewModel.returnTotalSavings())
+                    Text(isFiltered ? viewModel.convertDateToString() : viewModel.currentMonthDateString())
+                        .fontWeight(.bold)
+                        .font(.system(size: 12))
+                        .padding(.bottom, 25)
+                    Text("Available balance:")
+                    Text(viewModel.returnTotal(expenses: viewModel.expenses))
                         .font(.system(size: 35, weight: .bold))
                         .lineLimit(1)
                         .padding(.bottom, 5)
+                    Text("Tap for more info.")
+                        .opacity(0.75)
+                        .font(.system(size: 12))
                 }
             }
             .foregroundColor(.white)
@@ -115,5 +134,5 @@ extension SavingsView {
         .frame(height: 180)
         .padding(.top)
         .padding(.horizontal)
-    }
+    }    
 }

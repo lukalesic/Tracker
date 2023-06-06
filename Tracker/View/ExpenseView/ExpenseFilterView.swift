@@ -44,7 +44,7 @@ extension DetailView{
     func filterText() -> some View {
         VStack {
             Text("Filter")
-                .font (.title2.bold())
+                .font(.title2.bold())
                 .opacity (0.7)
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
@@ -74,12 +74,12 @@ extension DetailView{
                 .fill(
                     LinearGradient(colors: [Color.blue, Color.cyan], startPoint: animateGradient ? .topLeading : .bottomLeading, endPoint: animateGradient ? .topTrailing: .bottomTrailing)
                 )
-                .opacity(0.7)
+                .opacity(0.5)
                 .shadow(color: .blue, radius: 10)
                 .padding(.horizontal)
                 .hueRotation(.degrees(animateGradient ? 90 : 0))
                 .onAppear {
-                    withAnimation(.easeInOut(duration: 7).repeatForever(autoreverses: true)) {
+                    withAnimation(.easeInOut(duration: 9).repeatForever(autoreverses: true)) {
                         animateGradient.toggle()
                     }
                 }
